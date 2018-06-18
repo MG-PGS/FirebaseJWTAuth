@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Firebase JSON Web Token Access</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <header class="title">Firebase JSON Web Token Access <span class="info">Please, open console window to check some messages during operations</span></header>
+    <section>
+        <button id="signin">Sign in user</button>
+        <div class="formular">
+            <div class="table-row">
+                <div class="table-cell">Role:</div>
+                <div class="table-cell"><input type="text" id="role-input" maxlength="25"></div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">Name:</div>
+                <div class="table-cell"><input type="text" id="name-input" maxlength="25"></div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">Surname:</div>
+                <div class="table-cell"><input type="text" id="surname-input" maxlength="25"></div>
+            </div>
+        </div>
+        <button id="get-data">Get Data</button>
+        <button id="set-data">Set Data</button>
+        <button id="clear-form">Clear Form</button>
+        <button id="signout">Sign out user</button>
+    </section>
+    <footer>MG 2018</footer>
+</body>
+
+<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyAA9f-Mft7aXwC_QmCwm20okPJUYeArI8w",
+        authDomain: "nodeexpress-fc15e.firebaseapp.com",
+        databaseURL: "https://nodeexpress-fc15e.firebaseio.com",
+        projectId: "nodeexpress-fc15e",
+        storageBucket: "nodeexpress-fc15e.appspot.com",
+        messagingSenderId: "56925048296"
+    };
+    firebase.initializeApp(config);
+
+    // ----------------------------------------------
+    // Sample of data structure in Firebase Database:
+    // ----------------------------------------------
+    // person
+    //   name: "Marcin"
+    //   surname: "Gierczak"
+    // role: "Admin"
+    // ----------------------------------------------
+    // NOTE: Any changes in Firebase Database Console will be automatically visible in this app. That's because Firebase API uses a web sockets underneath.
+    // ----------------------------------------------
+
+    var db = firebase.database();
+    var ref = db.ref();
+
+    // ----------------------------------------------
+    // Authentication
+    // ----------------------------------------------
+    // Default settings in Firebase (authentication):
+    // {
+    //   "rules": {
+    //     ".read": "auth != null",
+    //     ".write": "auth != null"
+    //   }
+    // }
+    // ----------------------------------------------
+    // Authentication using a JSON Web Token
+    // ----------------------------------------------
+    // Resources: 
+    // Add the Firebase Admin SDK to Your Server - https://firebase.google.com/docs/admin/setup
+    // Create Custom Tokens - https://firebase.google.com/docs/auth/admin/create-custom-tokens
+    // Authenticate with Firebase in JavaScript Using a Custom Authentication System - https://firebase.google.com/docs/auth/web/custom-auth
+    // Add Firebase to your JavaScript Project - https://firebase.google.com/docs/web/setup
+    // ----------------------------------------------
+
+    function signIn() {
+        var token = 'token_here'; // JSON Web Token generated on Node.js server - in our case file index.js
+
+        firebase.auth().signInWithCustomToken(token).then(function(ro) {
+            console.log(firebase.auth().currentUser);
+            console.log('Successfully authenticated!');
+        }).catch(function(error) {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            console.error('Errors on authentication!', errorCode, errorMessage);
+        });
+    }
+
+    function signOut() {
+        firebase.auth().signOut().then(function() {
+            console.log('Successfully signout!');
+        }).catch(function(error) {
+            console.error('Errors on signout!');
+        });
+    }
+
+    $('#set-data').click(function() {
+        ref.set({
+            person: {
+                name: $('#name-input').val(),
+                surname: $('#surname-input').val()
+            },
+            role: $('#role-input').val()
+        })
+    });
+
+    $('#get-data').click(function() {
+        // IMPORTANT: If 'snapshot' argument is invalid it could means there is a problem with authorization!
+        ref.on('value', function(snapshot) {
+            $('#name-input').val(snapshot.val().person.name);
+            $('#surname-input').val(snapshot.val().person.surname);
+            $('#role-input').val(snapshot.val().role);
+        });
+    });
+
+    $('#clear-form').click(function() {
+        $('#name-input').val('');
+        $('#surname-input').val('');
+        $('#role-input').val('');
+    });
+
+    $('#signout').click(function() {
+        signOut();
+    });
+
+    $('#signin').click(function() {
+        signIn();
+    });
+</script>
+
+</html>

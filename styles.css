@@ -1,0 +1,68 @@
+body,
+html {
+    background-color: #264c8e;
+    color: #fff;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1.1em;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+
+button {
+    margin-top: 2em;
+    padding: .5em;
+    font-size: 1.1em;
+    width: 5em;
+}
+
+#signin {
+    margin-bottom: 2em;
+}
+
+#signout {
+    display: block;
+    margin-top: 2em;
+}
+
+.info {
+    display: block;
+    font-size: .25em;
+}
+
+input {
+    padding: .41em;
+    font-size: 1.2em;
+}
+
+section {
+    margin-left: 1.1em;
+}
+
+.title {
+    font-size: 3em;
+    padding: .5em .5em 0 .5em;
+}
+
+.formular {
+    display: table;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    font-size: .7em;
+    height: 2em;
+    padding: 1em 1em .5em 1em;
+    background-color: #162e58;
+}
+
+.table-cell {
+    display: table-cell;
+    padding: .5em;
+}
+
+.table-row {
+    display: table-row;
+}
